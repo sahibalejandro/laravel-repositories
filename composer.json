@@ -1,0 +1,15 @@
+{
+  "name": "sahib/repositories",
+  "description": "Laravel 5 Repository Pattern",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sahib J. Leo",
+      "email": "sahib@sahib.io"
+    }
+  ],
+  "require": {
+    "illuminate/database": ">=5.0",
+    "illuminate/support": ">=5.0"
+  }
+}
