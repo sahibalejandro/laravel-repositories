@@ -137,7 +137,7 @@ interface RepositoryInterface
     public function updateAll($attributes);
 
     /**
-     * Delete the records.
+     * Delete a record.
      *
      * @param int $id
      * @return mixed

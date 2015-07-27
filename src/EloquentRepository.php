@@ -7,9 +7,9 @@ use Sahib\Repositories\Criteria\CriteriaInterface;
 abstract class EloquentRepository implements RepositoryInterface
 {
     /**
-     * Model instance to make queries.
+     * Model FQCN.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var string
      */
     protected $model;
 
@@ -21,13 +21,20 @@ abstract class EloquentRepository implements RepositoryInterface
     protected $criteria = [];
 
     /**
+     * Default number of resources per page when using pagination.
+     *
+     * @var int
+     */
+    protected $perPage = 15;
+
+    /**
      * Prepare the repository for query.
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query()
     {
-        $query = $this->model->newQuery();
+        $query = app($this->model)->newQuery();
 
         $this->applyCriteria($query);
 
@@ -66,9 +73,12 @@ abstract class EloquentRepository implements RepositoryInterface
      * @param array $columns
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
-    public function paginate($perPage = 15, $columns = ['*'])
+    public function paginate($perPage = null, $columns = ['*'])
     {
-        return $this->query()->paginate($perPage, $columns);
+        return $this->query()->paginate(
+            is_null($perPage) ? $this->perPage : $perPage,
+            $columns
+        );
     }
 
     /**
@@ -78,9 +88,12 @@ abstract class EloquentRepository implements RepositoryInterface
      * @param array $columns
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function simplePaginate($perPage = 15, $columns = ['*'])
+    public function simplePaginate($perPage = null, $columns = ['*'])
     {
-        return $this->query()->simplePaginate($perPage, $columns);
+        return $this->query()->simplePaginate(
+            is_null($perPage) ? $this->perPage : $perPage,
+            $columns
+        );
     }
 
     /**
@@ -176,7 +189,7 @@ abstract class EloquentRepository implements RepositoryInterface
      */
     public function create($attributes)
     {
-        return $this->model->create($attributes);
+        return app($this->model)->create($attributes);
     }
 
     /**
