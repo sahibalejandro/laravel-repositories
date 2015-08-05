@@ -17,9 +17,10 @@ interface RepositoryInterface
      * Apply a criteria.
      *
      * @param \Sahib\Repositories\Criteria\CriteriaInterface $criteria
+     * @param bool $permanent
      * @return $this
      */
-    public function criteria(CriteriaInterface $criteria);
+    public function criteria(CriteriaInterface $criteria, $permanent = false);
 
     /**
      * Get all records.

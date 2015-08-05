@@ -45,11 +45,12 @@ abstract class EloquentRepository implements RepositoryInterface
      * Apply a criteria.
      *
      * @param \Sahib\Repositories\Criteria\CriteriaInterface $criteria
+     * @param bool $permanent
      * @return $this
      */
-    public function criteria(CriteriaInterface $criteria)
+    public function criteria(CriteriaInterface $criteria, $permanent = false)
     {
-        $this->criteria[] = $criteria;
+        $this->criteria[] = compact('criteria', 'permanent');
 
         return $this;
     }
@@ -245,7 +246,13 @@ abstract class EloquentRepository implements RepositoryInterface
     {
         /** @var \Sahib\Repositories\Criteria\CriteriaInterface $criteria */
         foreach ($this->criteria as $criteria) {
-            $criteria->apply($query);
+            $criteria['criteria']->apply($query);
         }
+
+        // Remove non permanent criteria.
+        $this->criteria = array_filter($this->criteria, function ($criteria) {
+            return $criteria['permanent'];
+        });
+
     }
 }
